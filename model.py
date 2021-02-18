@@ -166,6 +166,22 @@ def train_rain_model_weekly(historical_data):
     json_predictions = dict(enumerate(proper_data))
     return json_predictions  
     
+def train_wind_model_weekly(historical_data):
+    daily_temp = []
+    for d in historical_data:
+        daily_temp.append((dict(d)['wspd']))
+    print(daily_temp)
+    from statsmodels.tsa.ar_model import AutoReg
+    from sklearn.metrics import mean_squared_error
+    model_ar_fit = AutoReg(daily_temp, lags=7).fit()
+    predictions = model_ar_fit.predict(start=len(daily_temp),end=len(daily_temp)+7)
+    proper_data = []
+    for i in predictions:
+        new_i = math.floor(i)
+        proper_data.append(new_i)
+    json_predictions = dict(enumerate(proper_data))
+    return json_predictions
+
     # from statsmodels.tsa.ar_model import AutoReg
     # from sklearn.metrics import mean_squared_error
     # model_ar_fit = AutoReg(daily_temp, lags=7).fit()

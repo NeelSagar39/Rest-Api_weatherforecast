@@ -71,5 +71,12 @@ class cloud_weekly(Resource):
         return j_pred
 api.add_resource(cloud_weekly,"/get-cloud-weekly")
 
+class wind_weekly(Resource):
+    def get(self):
+        historical_data = data.request_weekly()
+        j_pred = model.train_wind_model_weekly(historical_data)
+        return j_pred
+api.add_resource(wind_weekly,"/get-wind-weekly")
+
 if __name__ == "__main__":
     app.run(debug=True)
