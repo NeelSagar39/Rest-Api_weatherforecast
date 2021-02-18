@@ -35,9 +35,10 @@ def request_hourly():
 
 def request_weekly():
     current_time = str(datetime.date.today() + dateutil.relativedelta.relativedelta(days=-1))+"T00:00:00"
-    start_day = datetime.date.today() + dateutil.relativedelta.relativedelta(months=-5)
+    start_day = datetime.date.today() + dateutil.relativedelta.relativedelta(days=-50)
     start_day = str(start_day)+"T00:00:00"
     url = "https://visual-crossing-weather.p.rapidapi.com/history"
+    print(start_day,current_time,'lil')
 
     querystring = {"startDateTime":start_day,"aggregateHours":"24","location":"53.34399,-6.26719","endDateTime":current_time,
     "unitGroup":"metric","dayStartTime":"8:00:00","contentType":"json","dayEndTime":"17:00:00","shortColumnNames":"0"}
