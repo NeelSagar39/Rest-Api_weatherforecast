@@ -34,7 +34,7 @@ def request_hourly():
   return historical_data
 
 def request_weekly():
-    current_time = str(datetime.date.today())+"T00:00:00"
+    current_time = str(datetime.date.today() + dateutil.relativedelta.relativedelta(days=-1))+"T00:00:00"
     start_day = datetime.date.today() + dateutil.relativedelta.relativedelta(months=-5)
     start_day = str(start_day)+"T00:00:00"
     url = "https://visual-crossing-weather.p.rapidapi.com/history"
@@ -49,7 +49,7 @@ def request_weekly():
 
     response = requests.request("GET", url, headers=headers, params=querystring)
     data_dict = json.loads(response.text)
-    #print(data_dict['locations'])
+    print("help",data_dict)
     data_dict = dict((data_dict['locations']))
     data_dict = dict(data_dict['53.34399,-6.26719'])
     data_dict = data_dict['values']
