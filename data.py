@@ -35,7 +35,7 @@ def request_hourly():
 
 def request_weekly():
     current_time = str(datetime.date.today() + dateutil.relativedelta.relativedelta(days=-1))+"T00:00:00"
-    start_day = datetime.date.today() + dateutil.relativedelta.relativedelta(days=-50)
+    start_day = datetime.date.today() + dateutil.relativedelta.relativedelta(days=-30)
     start_day = str(start_day)+"T00:00:00"
     url = "https://visual-crossing-weather.p.rapidapi.com/history"
     print(start_day,current_time,'lil')
