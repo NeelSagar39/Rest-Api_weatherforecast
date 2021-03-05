@@ -77,7 +77,8 @@ class UnitTester():
     @staticmethod
     def test():
         record, log_path = log_file_and_timestamp(test_type='unit')
-
+        historical_data_hourly = None
+        historical_data_weekly = None
         # reflection feature
         for module in UnitTester.modules_list:
             module_ref = __import__(module)
@@ -91,13 +92,11 @@ class UnitTester():
                         'function: ' + func_name + '    test_result: FAILED!' + UnitTester.unit_test_failed_types[
                             'FUNCTION_MISSING'])
                 else:
-                    historical_data_hourly = None
-                    historical_data_weekly = None
                     # all functions from 'model' needs parameters
                     if module is 'model':
+                        param = historical_data_weekly if 'weekly' in func_name else historical_data_hourly
                         try:
-                            func_response = func_ref(
-                                historical_data_weekly if 'weekly' in func_name else historical_data_hourly)
+                            func_response = func_ref(param)
                         except BaseException:
                             record.write(
                                 'function: ' + func_name + '    test_result: FAILED!' +
@@ -138,5 +137,8 @@ class UnitTester():
         print('all unit tests have been finished, please check test log file in ' + log_path)
 
 
-# InterfacesTester.test()
+InterfacesTester.test()
 UnitTester.test()
+# from model import pre_process
+# from data import request_hourly
+# print(pre_process(request_hourly()))
