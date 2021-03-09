@@ -34,11 +34,12 @@ def request_hourly():
   return historical_data
 
 def request_weekly():
+    with open('./weather.json') as f:
+      default_data = json.load(f)
     current_time = str(datetime.date.today() + dateutil.relativedelta.relativedelta(days=-1))+"T00:00:00"
     start_day = datetime.date.today() + dateutil.relativedelta.relativedelta(days=-30)
     start_day = str(start_day)+"T00:00:00"
     url = "https://visual-crossing-weather.p.rapidapi.com/history"
-    print(start_day,current_time,'lil')
 
     querystring = {"startDateTime":start_day,"aggregateHours":"24","location":"53.34399,-6.26719","endDateTime":current_time,
     "unitGroup":"metric","dayStartTime":"8:00:00","contentType":"json","dayEndTime":"17:00:00","shortColumnNames":"0"}
@@ -48,12 +49,21 @@ def request_weekly():
         'x-rapidapi-host': "visual-crossing-weather.p.rapidapi.com"
         }
 
-    response = requests.request("GET", url, headers=headers, params=querystring)
-    data_dict = json.loads(response.text)
-    print("help",data_dict)
-    data_dict = dict((data_dict['locations']))
-    data_dict = dict(data_dict['53.34399,-6.26719'])
-    data_dict = data_dict['values']
-    return data_dict
+    response_1 = requests.request("GET", url, headers=headers, params=querystring)
+    response_2 = requests.request("GET", 'https://citymanagement.herokuapp.com/flaskdata')
+    if response_1.status_code == '200':
+      data_dict = json.loads(response_1.text)
+      print("help",data_dict)
+      data_dict = dict((data_dict['locations']))
+      data_dict = dict(data_dict['53.34399,-6.26719'])
+      data_dict = data_dict['values']
+      return data_dict
+    elif response_2.status_code == '200':
+      data_dict = json.loads(response_2.text)
+      print(data_dict['success'])
+      data_dict = data_dict['data']
+      return data_dict
+    else:
+      return default_data
 
 #historical_data = request_hourly()
