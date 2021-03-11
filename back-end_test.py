@@ -1,5 +1,5 @@
 # include unit test and interfaces test, after finish test there will be a log file can be tracked
-
+# To initiate test process, call InterfacesTester.test() and UnitTester.test()
 import datetime
 import requests
 
@@ -79,7 +79,6 @@ class UnitTester():
         record, log_path = log_file_and_timestamp(test_type='unit')
         historical_data_hourly = None
         historical_data_weekly = None
-        # reflection feature
         for module in UnitTester.modules_list:
             module_ref = __import__(module)
             record.write('test module: ' + module + '\n')
@@ -135,10 +134,3 @@ class UnitTester():
         record.write('\n\n')
         record.close()
         print('all unit tests have been finished, please check test log file in ' + log_path)
-
-
-InterfacesTester.test()
-UnitTester.test()
-# from model import pre_process
-# from data import request_hourly
-# print(pre_process(request_hourly()))
