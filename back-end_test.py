@@ -92,7 +92,7 @@ class UnitTester():
                             'FUNCTION_MISSING'])
                 else:
                     # all functions from 'model' needs parameters
-                    if module is 'model':
+                    if module == 'model':
                         param = historical_data_weekly if 'weekly' in func_name else historical_data_hourly
                         try:
                             func_response = func_ref(param)
