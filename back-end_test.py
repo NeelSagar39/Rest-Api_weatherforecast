@@ -57,7 +57,9 @@ class UnitTester():
     functions_list = {
         'data': [
             'request_hourly',
-            'request_weekly'
+            'request_weekly',
+            'request_original_data',
+            'request_new_data'
         ],
         'model': [
             'pre_process',
@@ -71,6 +73,7 @@ class UnitTester():
             'train_cloud_model_weekly',
             'train_rain_model_weekly',
             'train_wind_model_weekly',
+            'train_traffic_model'
         ]
     }
 
@@ -79,6 +82,8 @@ class UnitTester():
         record, log_path = log_file_and_timestamp(test_type='unit')
         historical_data_hourly = None
         historical_data_weekly = None
+        traffic_original_data = None
+        traffic_new_data = None
         for module in UnitTester.modules_list:
             module_ref = __import__(module)
             record.write('test module: ' + module + '\n')
@@ -95,10 +100,15 @@ class UnitTester():
                     if module == 'model':
                         param = historical_data_weekly if 'weekly' in func_name else historical_data_hourly
                         try:
-                            func_response = func_ref(param)
-                        except BaseException:
+                            if 'traffic' in func_name:
+                                param_original = traffic_original_data
+                                param_new = traffic_new_data
+                                func_response = func_ref(param_original, param_new)
+                            else:
+                                func_response = func_ref(param)
+                        except SyntaxError:
                             record.write(
-                                'function: ' + func_name + '    test_result: FAILED!' +
+                                'function: ' + func_name + '    test_result: FAILED! ' +
                                 UnitTester.unit_test_failed_types[
                                     'FUNCTION_ERROR'])
                         else:
@@ -127,10 +137,19 @@ class UnitTester():
                             else:
                                 record.write('function: ' + func_name + '   test_result: PASS!')
                                 # maybe there will be error in the future since some functions have not been implemented
-                                historical_data_hourly = func_ref() if 'hourly' in func_name else None
-                                historical_data_weekly = func_ref() if 'weekly' in func_name else None
+                                if historical_data_hourly is None and 'hourly' in func_name:
+                                    historical_data_hourly = func_ref()
+                                elif historical_data_weekly is None and 'weekly' in func_name:
+                                    historical_data_weekly = func_ref()
+                                elif traffic_original_data is None and 'original' in func_name:
+                                    traffic_original_data = func_ref()
+                                elif traffic_new_data is None and 'new' in func_name:
+                                    traffic_new_data = func_ref()
+
                 record.write('\n')
-            record.write('\n')
-        record.write('\n\n')
+            record.write('\n\n')
         record.close()
         print('all unit tests have been finished, please check test log file in ' + log_path)
+
+
+UnitTester.test()
