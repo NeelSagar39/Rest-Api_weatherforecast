@@ -17,9 +17,6 @@ export default function RouteCleaner(){
                         location:item.toString(),
                     })
                 }
-                else{
-                    // console.log(routeStart == routeEnd)
-                }
             });
             let routeObj = {
                 startpoint: routeStart,
