@@ -178,3 +178,13 @@ def train_wind_model_weekly(historical_data):
         proper_data.append(new_i)
     json_predictions = dict(enumerate(proper_data))
     return json_predictions
+def train_traffic_model(original_data,new_data):
+    original_data.pop('time')
+    buses = original_data.keys()
+    predictions = {}
+    for bus in buses:
+        avg_bus = sum(original_data[bus])/len(original_data[bus])
+        new_time = new_data[bus]
+        if avg_bus - new_time > 10:
+            predictions[bus] = 1
+    return predictions

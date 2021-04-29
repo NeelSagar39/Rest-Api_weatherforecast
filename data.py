@@ -1,10 +1,10 @@
 import datetime
 import json
 import time
-
+import pandas as pd
 import dateutil.relativedelta
 import requests
-
+import traffic_data_scrapper
 
 def request_hourly():
     current_time = datetime.date.today()
@@ -64,3 +64,22 @@ def request_weekly():
         return data_dict
     else:
         return default_data
+def request_original_data():
+    with open('durations_dataset.json') as f:
+        durations = json.load(f)
+    new_dict = {}
+    num = 0
+    for i in durations:
+        dict_i = dict(i)
+        keys = dict_i.keys()
+        if len(new_dict) == 0:
+            new_dict = { key : [] for key in keys }
+            
+        for j in dict_i.keys():
+            arr=new_dict[j]
+            arr.append(dict_i[j])
+        num+=1
+    return new_dict
+def request_new_data():
+    new_data = traffic_data_scrapper.timed_job()
+    return new_data

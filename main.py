@@ -105,3 +105,11 @@ class wind_weekly(Resource):
 
 
 api.add_resource(wind_weekly, "/get-wind-weekly")
+
+class traffic_data(Resource):
+    def get(self):
+        original_data = data.request_original_data()
+        new_data = data.request_new_data()
+        j_pred = model.train_traffic_model(original_data,new_data)
+        return j_pred
+api.add_resource(traffic_data, "/get-traffic-data")
