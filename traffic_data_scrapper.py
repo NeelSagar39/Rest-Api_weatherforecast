@@ -18,9 +18,10 @@ def timed_job():
         #print(curr_route)
         #print(curr_route['startpoint'],curr_route['endpoint'])
         directions_result = gmaps.directions(curr_route['startpoint'],curr_route['endpoint'], mode="transit")
-        duration =int(str(directions_result[0].get("legs")[0].get("duration").get('text')).split(' ')[0])
-        temp = {key:duration}
-        route_dict.update(temp)
+        if(len(directions_result) != 0):
+            duration =int(str(directions_result[0].get("legs")[0].get("duration").get('text')).split(' ')[0])
+            temp = {key:duration}
+            route_dict.update(temp)
     route_dict.update(time)
     print('Dictionary made now Writing to file ......')
     # with open('durations_dataset.json', 'a') as outfile:

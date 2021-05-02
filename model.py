@@ -184,7 +184,12 @@ def train_traffic_model(original_data,new_data):
     predictions = {}
     for bus in buses:
         avg_bus = sum(original_data[bus])/len(original_data[bus])
-        new_time = new_data[bus]
-        if avg_bus - new_time > 10:
+        try:
+            new_time = new_data[bus]
+        except (Exception):
+            print("ERROR", bus)
+            continue
+        if new_time - avg_bus > 10:
+            print(bus,avg_bus,new_time)
             predictions[bus] = 1
     return predictions
